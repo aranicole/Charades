@@ -1,10 +1,11 @@
 {
-  "name": "Magenta Charades",
+  "name": "Charades",
   "short_name": "Charades",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#4a041a",
   "theme_color": "#e57ca3",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon.png",
