@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magenta Charades Pro - Large Timer</title>
+    <style>
+        :root {
+            --bg-dark: #4a041a;   
+            --bg-mid: #881b42;    
+            --bg-light: #e57ca3;  
+            --card-bg: #6b0f30;
+            --text: #ffffff;
+            --accent: #fbcfe8;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 95%;
+            max-width: 500px;
+            height: 92vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tabs { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 15px; 
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--bg-light);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active { background: var(--bg-light); color: var(--bg-dark); }
+
+        .content-section { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+        .content-section.active { display: flex; }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            padding: 2rem 1.5rem;
+            border-radius: 25px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid var(--bg-light);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            margin-bottom: 15px;
+        }
+
+        .category-tag { text-transform: uppercase; font-size: 0.8rem; color: var(--bg-light); margin-bottom: 0.8rem; font-weight: bold; }
+        #display-text { font-size: 2.4rem; font-weight: 900; margin: 0; line-height: 1.1; }
+
+        .btn-main {
+            background: var(--bg-light);
+            color: var(--bg-dark);
+            border: none;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: transform 0.1s;
+        }
+        .btn-main:active { transform: scale(0.96); }
+
+        /* LARGE BOTTOM TIMER AREA */
+        .timer-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: auto;
+            padding: 15px 0;
+            background: rgba(0,0,0,0.15);
+            border-radius: 25px;
+        }
+
+        .timer-circle {
+            width: 100px; /* Increased size */
+            height: 100px; /* Increased size */
+            border-radius: 50%;
+            border: 5px solid var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 2rem; /* Bigger font */
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 0 20px rgba(229, 124, 163, 0.2);
+        }
+
+        .timer-low { border-color: #ff5f5f; color: #ff5f5f; animation: pulse 0.8s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px #ff5f5f; }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px #ff5f5f; }
+            100% { transform: scale(1); box-shadow: 0 0 10px #ff5f5f; }
+        }
+
+        .time-adjuster {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .adj-btn {
+            background: var(--bg-light);
+            color: var(--bg-dark);
+            border: none;
+            width: 40px; /* Bigger buttons */
+            height: 40px; /* Bigger buttons */
+            border-radius: 50%;
+            font-weight: 900;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Lists and Inputs */
+        .input-title { font-size: 0.75rem; color: var(--bg-light); font-weight: bold; margin: 8px 0; text-transform: uppercase; }
+        .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+        .cat-select-btn { background: rgba(0,0,0,0.3); border: 1px solid var(--bg-mid); color: var(--text); padding: 10px; border-radius: 10px; cursor: pointer; font-size: 0.75rem; }
+        .cat-select-btn.selected { background: var(--bg-mid); border-color: var(--bg-light); }
+        input { background: rgba(0,0,0,0.4); border: 1px solid var(--bg-light); padding: 12px; border-radius: 12px; color: white; outline: none; margin-bottom: 10px; }
+        .list-container { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 15px; flex: 1; overflow-y: auto; margin-top: 10px; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+        .del-btn { color: #ff5f5f; cursor: pointer; border: 1px solid #ff5f5f; padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; }
+        .warning { color: #ffeb3b; font-size: 0.75rem; font-weight: bold; display: none; text-align: center; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="tabs">
+        <button id="btn-game" class="tab-btn active" onclick="showTab('game')">🎮 PLAY</button>
+        <button id="btn-custom" class="tab-btn" onclick="showTab('custom')">✍️ ADD</button>
+        <button id="btn-library" class="tab-btn" onclick="showTab('library')">📚 LIBRARY</button>
+        <button id="btn-history" class="tab-btn" onclick="showTab('history')">📜 HISTORY</button>
+    </div>
+
+    <div id="game-section" class="content-section active">
+        <div class="card">
+            <span id="category-label" class="category-tag">Ready?</span>
+            <h1 id="display-text">START</h1>
+        </div>
+        
+        <button class="btn-main" onclick="generateCharade()">NEXT PROMPT</button>
+
+        <div class="timer-area">
+            <div id="timer-display" class="timer-circle">1:30</div>
+            <div class="time-adjuster">
+                <button class="adj-btn" onclick="adjustMaxTime(-15)">−</button>
+                <span id="setting-display" style="font-size:1.1rem; font-weight:900;">Set: 1:30</span>
+                <button class="adj-btn" onclick="adjustMaxTime(15)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-section" class="content-section">
+        <div class="input-title">1. Category</div>
+        <div class="category-grid">
+            <button class="cat-select-btn selected" onclick="selectCat(this, '🎬 Movie')">🎬 Movie</button>
+            <button class="cat-select-btn" onclick="selectCat(this, '🎵 Song')">🎵 Song</button>
+            <button class="cat-select-btn" onclick="selectCat(this, '📺 TV Series')">📺 TV Series</button>
+            <button class="cat-select-btn" onclick="selectCat(this, '🍽️ Food')">🍽️ Food</button>
+            <button class="cat-select-btn" onclick="selectCat(this, '👤 Character')">👤 Character</button>
+        </div>
+        <div id="dup-warn" class="warning">⚠️ Already exists!</div>
+        <input type="text" id="custom-input" placeholder="Type word...">
+        <button class="btn-main" style="margin-top:0" onclick="addCustomItem()">ADD TO DECK</button>
+        <div class="list-container" id="custom-list"></div>
+    </div>
+
+    <div id="library-section" class="content-section">
+        <div class="list-container" id="library-container"></div>
+    </div>
+
+    <div id="history-section" class="content-section">
+        <div class="list-container" id="history-container"></div>
+        <button class="btn-main" style="background:var(--bg-mid); color:white; margin-top:10px" onclick="clearData()">WIPE ALL DATA</button>
+    </div>
+</div>
+
+<script>
+    const masterData = {
+        "🎬 Movie": ["Frozen", "Jurassic Park", "Toy Story", "Spider-Man", "The Matrix", "Lion King", "Home Alone", "Finding Nemo", "Avatar", "Inside Out", "The Avengers", "Jaws", "Star Wars", "Harry Potter", "Moana", "Shrek", "Titanic", "Ghostbusters", "Back to the Future", "Encanto"],
+        "🎵 Song": ["Let It Go", "Thriller", "Baby Shark", "Shake It Off", "Happy", "Hakuna Matata", "Uptown Funk", "Old Town Road", "Stayin' Alive", "Bohemian Rhapsody", "Under the Sea", "YMCA", "Billie Jean", "A Whole New World", "Single Ladies"],
+        "📺 TV Series": ["SpongeBob", "Stranger Things", "The Office", "The Mandalorian", "The Simpsons", "Pokémon", "Wednesday", "Bluey", "Full House", "iCarly", "Phineas and Ferb", "Henry Danger", "Scooby-Doo", "Teen Titans Go", "Gravity Falls"],
+        "🍽️ Food": ["Pizza", "Sushi", "Taco", "Ice Cream", "Hamburger", "Pancakes", "Hot Dog", "Popcorn", "Chicken Nuggets", "Spaghetti", "Watermelon", "Cupcake", "Donut", "Burrito", "Mac and Cheese"],
+        "👤 Character": ["Mickey Mouse", "Batman", "Elsa", "Darth Vader", "Harry Potter", "Spider-Man", "Buzz Lightyear", "Superman", "Pikachu", "Iron Man", "Jack Sparrow", "Santa Claus", "Mario", "Sonic", "Wonder Woman", "Olaf"]
+    };
+
+    let customItems = JSON.parse(localStorage.getItem('magenta_custom')) || [];
+    let history = JSON.parse(localStorage.getItem('magenta_history')) || [];
+    let fullPool = [];
+    let selectedCategory = "🎬 Movie";
+    
+    let maxTime = 90; 
+    let timeLeft = 90;
+    let timerInterval = null;
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function adjustMaxTime(amount) {
+        maxTime = Math.max(30, Math.min(300, maxTime + amount));
+        timeLeft = maxTime;
+        document.getElementById('setting-display').innerText = `Set: ${formatTime(maxTime)}`;
+        document.getElementById('timer-display').innerText = formatTime(timeLeft);
+        clearInterval(timerInterval);
+        document.getElementById('timer-display').classList.remove('timer-low');
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeLeft = maxTime;
+        const display = document.getElementById('timer-display');
+        display.classList.remove('timer-low');
+        display.innerText = formatTime(timeLeft);
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            display.innerText = formatTime(timeLeft);
+            if (timeLeft <= 10) display.classList.add('timer-low');
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('display-text').innerText = "TIME UP!";
+            }
+        }, 1000);
+    }
+
+    function saveToStorage() {
+        localStorage.setItem('magenta_custom', JSON.stringify(customItems));
+        localStorage.setItem('magenta_history', JSON.stringify(history));
+    }
+
+    function initPool() {
+        fullPool = [];
+        for (const cat in masterData) {
+            masterData[cat].forEach(item => fullPool.push({ cat, item }));
+        }
+        customItems.forEach(obj => fullPool.push(obj));
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tabName + '-section').classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + tabName).classList.add('active');
+        if(tabName === 'library') updateLibraryUI();
+    }
+
+    function selectCat(btn, cat) {
+        document.querySelectorAll('.cat-select-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedCategory = cat;
+    }
+
+    function addCustomItem() {
+        const input = document.getElementById('custom-input');
+        const word = input.value.trim();
+        if (!word) return;
+        const isDup = [...fullPool, ...customItems].some(obj => obj.item.toLowerCase() === word.toLowerCase());
+        if (isDup) {
+            document.getElementById('dup-warn').style.display = "block";
+            setTimeout(() => document.getElementById('dup-warn').style.display = "none", 2000);
+            return;
+        }
+        customItems.push({ cat: selectedCategory, item: word });
+        saveToStorage();
+        initPool();
+        input.value = "";
+        updateCustomUI();
+    }
+
+    function removeCustom(index) {
+        customItems.splice(index, 1);
+        saveToStorage();
+        initPool();
+        updateCustomUI();
+    }
+
+    function generateCharade() {
+        if (fullPool.length === 0) initPool();
+        const randomIndex = Math.floor(Math.random() * fullPool.length);
+        const selected = fullPool.splice(randomIndex, 1)[0];
+        document.getElementById('category-label').innerText = selected.cat;
+        document.getElementById('display-text').innerText = selected.item;
+        history.unshift(selected);
+        saveToStorage();
+        updateHistoryUI();
+        startTimer();
+    }
+
+    function updateCustomUI() {
+        document.getElementById('custom-list').innerHTML = customItems.map((obj, i) => `
+            <div class="list-item">
+                <span><b>${obj.cat}:</b> ${obj.item}</span>
+                <span class="del-btn" onclick="removeCustom(${i})">Delete</span>
+            </div>
+        `).join('');
+    }
+
+    function updateLibraryUI() {
+        let html = "";
+        if (customItems.length > 0) {
+            html += `<div class="input-title">Your Additions</div>`;
+            customItems.forEach(obj => { html += `<div class="list-item"><span>${obj.cat}: ${obj.item}</span></div>`; });
+        }
+        html += `<div class="input-title">Default Library</div>`;
+        for (const cat in masterData) {
+            html += `<div style="color:var(--bg-light); font-weight:bold; margin-top:10px; border-bottom:1px solid var(--bg-mid)">${cat}</div>`;
+            masterData[cat].forEach(item => { html += `<div class="list-item"><span>${item}</span></div>`; });
+        }
+        document.getElementById('library-container').innerHTML = html;
+    }
+
+    function updateHistoryUI() {
+        document.getElementById('history-container').innerHTML = history.map(e => `
+            <div class="list-item"><span>${e.cat}: ${e.item}</span></div>
+        `).join('');
+    }
+
+    function clearData() {
+        if(confirm("Wipe everything?")) {
+            localStorage.clear();
+            customItems = []; history = [];
+            initPool(); updateCustomUI(); updateHistoryUI();
+            document.getElementById('display-text').innerText = "START";
+        }
+    }
+
+    initPool();
+    updateCustomUI();
+    updateHistoryUI();
+</script>
+</body>
+</html>
