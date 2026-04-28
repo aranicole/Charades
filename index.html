@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charades</title>
+    <title>Charades 🎭</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
@@ -38,6 +38,19 @@
             border-radius: 30px;
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Header Title Style */
+        .app-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .app-header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 1px;
+            color: var(--bg-light);
+            text-transform: uppercase;
         }
 
         .tabs { 
@@ -166,6 +179,10 @@
 <body>
 
 <div class="app-container">
+    <div class="app-header">
+        <h1>Charades 🎭</h1>
+    </div>
+
     <div class="tabs">
         <button id="btn-game" class="tab-btn active" onclick="showTab('game')"><i class="fas fa-gamepad"></i> PLAY</button>
         <button id="btn-custom" class="tab-btn" onclick="showTab('custom')"><i class="fas fa-pen"></i> ADD</button>
@@ -193,11 +210,11 @@
 
     <div id="custom-section" class="content-section">
         <div class="category-grid">
-            <button class="cat-select-btn selected" onclick="selectCat(this, '🎬 Movie')"><i class="fas fa-film"></i> Movie</button>
-            <button class="cat-select-btn" onclick="selectCat(this, '🎵 Song')"><i class="fas fa-music"></i> Song</button>
-            <button class="cat-select-btn" onclick="selectCat(this, '📺 TV Series')"><i class="fas fa-tv"></i> TV</button>
-            <button class="cat-select-btn" onclick="selectCat(this, '🍽️ Food')"><i class="fas fa-utensils"></i> Food</button>
-            <button class="cat-select-btn" onclick="selectCat(this, '👤 Character')"><i class="fas fa-user"></i> Person</button>
+            <button class="cat-select-btn selected" onclick="selectCat(this, 'Movie')"><i class="fas fa-film"></i> Movie</button>
+            <button class="cat-select-btn" onclick="selectCat(this, 'Song')"><i class="fas fa-music"></i> Song</button>
+            <button class="cat-select-btn" onclick="selectCat(this, 'TV')"><i class="fas fa-tv"></i> TV</button>
+            <button class="cat-select-btn" onclick="selectCat(this, 'Food')"><i class="fas fa-utensils"></i> Food</button>
+            <button class="cat-select-btn" onclick="selectCat(this, 'Person')"><i class="fas fa-user"></i> Person</button>
         </div>
         <input type="text" id="custom-input" placeholder="Type word...">
         <button class="btn-main" style="margin-top:0" onclick="addCustomItem()">ADD TO DECK</button>
