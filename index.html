@@ -96,11 +96,17 @@
         .category-header { color: var(--bg-light); font-weight: 800; font-size: 0.8rem; margin: 15px 0 8px 5px; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--bg-light); padding-left: 8px; }
         .list-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
 
-        input { width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px solid var(--bg-light); padding: 12px; border-radius: 12px; color: white; font-size: 16px; margin-bottom: 10px; }
+        input { width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px solid var(--bg-light); padding: 12px; border-radius: 12px; color: white; font-size: 16px; margin-bottom: 10px; outline: none; }
 
-        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
-        .cat-select-btn { background: rgba(0,0,0,0.3); border: 1px solid var(--bg-mid); color: var(--text); padding: 8px 4px; border-radius: 8px; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+        .cat-select-btn { 
+            background: rgba(0,0,0,0.3); border: 1px solid var(--bg-mid); 
+            color: var(--text); padding: 10px 4px; border-radius: 10px; 
+            font-size: 0.65rem; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; gap: 5px; 
+        }
         .cat-select-btn.selected { background: var(--bg-mid); border-color: var(--bg-light); }
+        .cat-select-btn span.emoji { font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -110,7 +116,7 @@
 
     <div class="tabs">
         <button id="btn-game" class="tab-btn active" onclick="showTab('game')"><i class="fas fa-play"></i><span>PLAY</span></button>
-        <button id="btn-library" class="tab-btn" onclick="showTab('library')"><i class="fas fa-book"></i><span>DECK</span></button>
+        <button id="btn-library" class="tab-btn" onclick="showTab('library')"><i class="fas fa-book"></i><span>LIBRARY</span></button>
         <button id="btn-custom" class="tab-btn" onclick="showTab('custom')"><i class="fas fa-plus"></i><span>ADD</span></button>
         <button id="btn-history" class="tab-btn" onclick="showTab('history')"><i class="fas fa-history"></i><span>LOG</span></button>
     </div>
@@ -137,11 +143,11 @@
 
     <div id="custom-section" class="content-section">
         <div class="category-grid">
-            <button class="cat-select-btn selected" onclick="selectCat(this, 'Movie')"><i class="fas fa-film"></i><span>Movie</span></button>
-            <button class="cat-select-btn" onclick="selectCat(this, 'Song')"><i class="fas fa-music"></i><span>Song</span></button>
-            <button class="cat-select-btn" onclick="selectCat(this, 'TV')"><i class="fas fa-tv"></i><span>TV</span></button>
-            <button class="cat-select-btn" onclick="selectCat(this, 'Food')"><i class="fas fa-utensils"></i><span>Food</span></button>
-            <button class="cat-select-btn" onclick="selectCat(this, 'Person')"><i class="fas fa-user"></i><span>Person</span></button>
+            <button class="cat-select-btn selected" onclick="selectCat(this, '🎬 Movie')"><span class="emoji">🎬</span><span>Movie</span></button>
+            <button class="cat-select-btn" onclick="selectCat(this, '🎵 Song')"><span class="emoji">🎵</span><span>Song</span></button>
+            <button class="cat-select-btn" onclick="selectCat(this, '📺 TV Series')"><span class="emoji">📺</span><span>TV Series</span></button>
+            <button class="cat-select-btn" onclick="selectCat(this, '🍽️ Food')"><span class="emoji">🍽️</span><span>Food</span></button>
+            <button class="cat-select-btn" onclick="selectCat(this, '👤 Person')"><span class="emoji">👤</span><span>Person</span></button>
         </div>
         <input type="text" id="custom-input" placeholder="Enter name or title...">
         <button class="btn-main" onclick="addCustomItem()">SAVE WORD</button>
@@ -156,17 +162,17 @@
 
 <script>
     const masterData = {
-        "Movie": ["Frozen", "Jurassic Park", "Toy Story", "Spider-Man", "The Matrix", "Lion King", "Home Alone", "Finding Nemo", "Avatar", "Inside Out", "The Avengers", "Jaws", "Star Wars", "Harry Potter", "Moana", "Shrek", "Titanic", "Ghostbusters", "Back to the Future", "Encanto"],
-        "Song": ["Let It Go", "Thriller", "Baby Shark", "Shake It Off", "Happy", "Hakuna Matata", "Uptown Funk", "Old Town Road", "Stayin' Alive", "Bohemian Rhapsody", "Under the Sea", "YMCA", "Billie Jean", "A Whole New World", "Single Ladies"],
-        "TV": ["SpongeBob", "Stranger Things", "The Office", "The Mandalorian", "The Simpsons", "Pokémon", "Wednesday", "Bluey", "Full House", "iCarly", "Phineas and Ferb", "Henry Danger", "Scooby-Doo", "Teen Titans Go", "Gravity Falls"],
-        "Food": ["Pizza", "Sushi", "Taco", "Ice Cream", "Hamburger", "Pancakes", "Hot Dog", "Popcorn", "Chicken Nuggets", "Spaghetti", "Watermelon", "Cupcake", "Donut", "Burrito", "Mac and Cheese"],
-        "Person": ["Mickey Mouse", "Batman", "Elsa", "Darth Vader", "Harry Potter", "Spider-Man", "Buzz Lightyear", "Superman", "Pikachu", "Iron Man", "Jack Sparrow", "Santa Claus", "Mario", "Sonic", "Wonder Woman", "Olaf"]
+        "🎬 Movie": ["Frozen", "Jurassic Park", "Toy Story", "Spider-Man", "The Matrix", "Lion King", "Home Alone", "Finding Nemo", "Avatar", "Inside Out", "The Avengers", "Jaws", "Star Wars", "Harry Potter", "Moana", "Shrek", "Titanic", "Ghostbusters", "Back to the Future", "Encanto"],
+        "🎵 Song": ["Let It Go", "Thriller", "Baby Shark", "Shake It Off", "Happy", "Hakuna Matata", "Uptown Funk", "Old Town Road", "Stayin' Alive", "Bohemian Rhapsody", "Under the Sea", "YMCA", "Billie Jean", "A Whole New World", "Single Ladies"],
+        "📺 TV Series": ["SpongeBob", "Stranger Things", "The Office", "The Mandalorian", "The Simpsons", "Pokémon", "Wednesday", "Bluey", "Full House", "iCarly", "Phineas and Ferb", "Henry Danger", "Scooby-Doo", "Teen Titans Go", "Gravity Falls"],
+        "🍽️ Food": ["Pizza", "Sushi", "Taco", "Ice Cream", "Hamburger", "Pancakes", "Hot Dog", "Popcorn", "Chicken Nuggets", "Spaghetti", "Watermelon", "Cupcake", "Donut", "Burrito", "Mac and Cheese"],
+        "👤 Person": ["Mickey Mouse", "Batman", "Elsa", "Darth Vader", "Harry Potter", "Spider-Man", "Buzz Lightyear", "Superman", "Pikachu", "Iron Man", "Jack Sparrow", "Santa Claus", "Mario", "Sonic", "Wonder Woman", "Olaf"]
     };
 
     let customItems = JSON.parse(localStorage.getItem('charades_custom')) || [];
     let history = JSON.parse(localStorage.getItem('charades_history')) || [];
     let fullPool = [];
-    let selectedCategory = "Movie";
+    let selectedCategory = "🎬 Movie";
     let maxTime = 90; let timeLeft = 90; let timerInterval = null;
 
     function formatTime(s) { return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`; }
@@ -224,13 +230,25 @@
     }
 
     function addCustomItem() {
-        const val = document.getElementById('custom-input').value.trim();
+        const inputEl = document.getElementById('custom-input');
+        const val = inputEl.value.trim();
         if (!val) return;
+
+        // Duplicate Check Logic
+        const isDuplicate = fullPool.some(entry => entry.item.toLowerCase() === val.toLowerCase());
+        
+        if (isDuplicate) {
+            alert("This word is already in the game!");
+            inputEl.value = "";
+            return;
+        }
+
         customItems.push({ cat: selectedCategory, item: val });
         localStorage.setItem('charades_custom', JSON.stringify(customItems));
         initPool();
-        document.getElementById('custom-input').value = "";
+        inputEl.value = "";
         updateCustomUI();
+        updateLibraryUI(); // Ensure Library shows the new word immediately
     }
 
     function removeCustom(i) {
@@ -238,19 +256,29 @@
         localStorage.setItem('charades_custom', JSON.stringify(customItems));
         initPool();
         updateCustomUI();
+        updateLibraryUI();
     }
 
     function updateCustomUI() {
         document.getElementById('custom-list').innerHTML = customItems.map((obj, i) => `
-            <div class="list-item"><span><b>${obj.cat}:</b> ${obj.item}</span><span onclick="removeCustom(${i})" style="color:#ff5f5f; font-weight:bold">X</span></div>
+            <div class="list-item"><span><b>${obj.cat}:</b> ${obj.item}</span><span onclick="removeCustom(${i})" style="color:#ff5f5f; font-weight:bold; padding: 0 10px;">X</span></div>
         `).join('');
     }
 
     function updateLibraryUI() {
         let html = "";
-        for (const cat in masterData) {
+        // Combine master and custom data for the library view
+        const combinedData = JSON.parse(JSON.stringify(masterData));
+        customItems.forEach(c => {
+            if (!combinedData[c.cat]) combinedData[c.cat] = [];
+            combinedData[c.cat].push(c.item + " (Custom)");
+        });
+
+        for (const cat in combinedData) {
             html += `<div class="category-header">${cat}</div>`;
-            masterData[cat].forEach(item => { html += `<div class="list-item"><span>${item}</span></div>`; });
+            combinedData[cat].forEach(item => { 
+                html += `<div class="list-item"><span>${item}</span></div>`; 
+            });
         }
         document.getElementById('library-container').innerHTML = html;
     }
@@ -263,7 +291,11 @@
 
     function clearData() { if(confirm("Clear history and custom words?")) { localStorage.clear(); location.reload(); } }
 
-    initPool(); updateCustomUI(); updateHistoryUI();
+    // Initial Load
+    initPool(); 
+    updateCustomUI(); 
+    updateHistoryUI(); 
+    updateLibraryUI();
 </script>
 </body>
 </html>
