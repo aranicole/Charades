@@ -234,21 +234,28 @@
         const val = inputEl.value.trim();
         if (!val) return;
 
-        // Duplicate Check Logic
-        const isDuplicate = fullPool.some(entry => entry.item.toLowerCase() === val.toLowerCase());
+        // CHECK 1: Is it in the masterData for this specific category?
+        const inMaster = masterData[selectedCategory] && masterData[selectedCategory].some(m => m.toLowerCase() === val.toLowerCase());
         
-        if (isDuplicate) {
-            alert("This word is already in the game!");
+        // CHECK 2: Is it already in the customItems for this specific category?
+        const inCustom = customItems.some(c => c.item.toLowerCase() === val.toLowerCase() && c.cat === selectedCategory);
+
+        if (inMaster || inCustom) {
+            alert(`"${val}" is already in the ${selectedCategory} category!`);
             inputEl.value = "";
             return;
         }
 
+        // Add to array
         customItems.push({ cat: selectedCategory, item: val });
+        // Save to storage
         localStorage.setItem('charades_custom', JSON.stringify(customItems));
+        // Reset pool so the new word is playable
         initPool();
+        // Clear UI
         inputEl.value = "";
         updateCustomUI();
-        updateLibraryUI(); // Ensure Library shows the new word immediately
+        updateLibraryUI();
     }
 
     function removeCustom(i) {
@@ -267,16 +274,18 @@
 
     function updateLibraryUI() {
         let html = "";
-        // Combine master and custom data for the library view
-        const combinedData = JSON.parse(JSON.stringify(masterData));
+        // Create a deep copy of master data to display
+        const displayObj = JSON.parse(JSON.stringify(masterData));
+        
+        // Merge custom items into display object for Library view
         customItems.forEach(c => {
-            if (!combinedData[c.cat]) combinedData[c.cat] = [];
-            combinedData[c.cat].push(c.item + " (Custom)");
+            if (!displayObj[c.cat]) displayObj[c.cat] = [];
+            displayObj[c.cat].push(c.item + " (Custom)");
         });
 
-        for (const cat in combinedData) {
+        for (const cat in displayObj) {
             html += `<div class="category-header">${cat}</div>`;
-            combinedData[cat].forEach(item => { 
+            displayObj[cat].forEach(item => { 
                 html += `<div class="list-item"><span>${item}</span></div>`; 
             });
         }
@@ -291,7 +300,7 @@
 
     function clearData() { if(confirm("Clear history and custom words?")) { localStorage.clear(); location.reload(); } }
 
-    // Initial Load
+    // Kickstart everything
     initPool(); 
     updateCustomUI(); 
     updateHistoryUI(); 
